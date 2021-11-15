@@ -585,7 +585,7 @@ Window {
             }
 
             text: UserModel.currentUser.unifiedSearchResultsListModel.searchTerm
-            readOnly: !UserModel.currentUser.isConnected || UserModel.currentUser.unifiedSearchResultsListModel.currentFetchMoreInProgressProviderId
+            readOnly: UserModel.numUsers() === 0 || !UserModel.currentUser.isConnected || UserModel.currentUser.unifiedSearchResultsListModel.currentFetchMoreInProgressProviderId
             isSearchInProgress: UserModel.currentUser.unifiedSearchResultsListModel.isSearchInProgress
             onTextEdited: { UserModel.currentUser.unifiedSearchResultsListModel.searchTerm = trayWindowUnifiedSearchInputContainer.text }
             onClearText: { UserModel.currentUser.unifiedSearchResultsListModel.searchTerm = "" }
@@ -593,7 +593,7 @@ Window {
 
         ErrorBox {
             id: unifiedSearchResultsErrorLabel
-            visible:  UserModel.currentUser.unifiedSearchResultsListModel.errorString && !unifiedSearchResultsListView.visible && ! UserModel.currentUser.unifiedSearchResultsListModel.isSearchInProgress && ! UserModel.currentUser.unifiedSearchResultsListModel.currentFetchMoreInProgressProviderId
+            visible: UserModel.numUsers() > 0 && UserModel.currentUser.unifiedSearchResultsListModel.errorString && !unifiedSearchResultsListView.visible && !UserModel.currentUser.unifiedSearchResultsListModel.isSearchInProgress && !UserModel.currentUser.unifiedSearchResultsListModel.currentFetchMoreInProgressProviderId
             text:  UserModel.currentUser.unifiedSearchResultsListModel.errorString
             color: Style.errorBoxBackgroundColor
             backgroundColor: Style.errorBoxTextColor
@@ -641,7 +641,7 @@ Window {
 
         UnifiedSearchResultItemSkeletonContainer {
             id: unifiedSearchResultsListViewSkeleton
-            visible: !unifiedSearchResultNothingFound.visible && !unifiedSearchResultsListView.visible && ! UserModel.currentUser.unifiedSearchResultsListModel.errorString &&  UserModel.currentUser.unifiedSearchResultsListModel.searchTerm
+            visible: !unifiedSearchResultNothingFound.visible && !unifiedSearchResultsListView.visible && UserModel.numUsers() > 0 && !UserModel.currentUser.unifiedSearchResultsListModel.errorString && UserModel.currentUser.unifiedSearchResultsListModel.searchTerm
             anchors.top: trayWindowUnifiedSearchInputContainer.bottom
             anchors.left: trayWindowBackground.left
             anchors.right: trayWindowBackground.right
