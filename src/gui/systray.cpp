@@ -21,6 +21,7 @@
 #include "tray/usermodel.h"
 #include "tray/unifiedsearchresultimageprovider.h"
 #include "configfile.h"
+#include "accessmanager.h"
 
 #include <QCursor>
 #include <QGuiApplication>
@@ -57,6 +58,8 @@ Systray *Systray::instance()
 void Systray::setTrayEngine(QQmlApplicationEngine *trayEngine)
 {
     _trayEngine = trayEngine;
+
+    _trayEngine->setNetworkAccessManagerFactory(&_accessManagerFactory);
 
     _trayEngine->addImportPath("qrc:/qml/theme");
     _trayEngine->addImageProvider("avatars", new ImageProvider);
@@ -500,6 +503,16 @@ QPoint Systray::calcTrayIconCenter() const
     // On Linux, fall back to mouse position (assuming tray icon is activated by mouse click)
     return QCursor::pos(currentScreen());
 #endif
+}
+
+AccessManagerFactory::AccessManagerFactory()
+    : QQmlNetworkAccessManagerFactory()
+{
+}
+
+QNetworkAccessManager* AccessManagerFactory::create(QObject *parent)
+{
+    return new AccessManager(parent);
 }
 
 } // namespace OCC
